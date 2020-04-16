@@ -10,14 +10,14 @@
             <div class="row">
                 @using (Html.BeginForm("Index", "Test", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    <div class="form-group">
+                <div class="form-group">
 
-                        @Html.Label("File Upload", new { @class = "col-sm-3" })
-
-                        <div class="col-sm-7">
-                            <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx" />
-                        </div>
+                    @Html.Label("File Upload", new { @class = "col-sm-3" })
+                    @*accept=".xls,.xlsx"*@
+                    <div class="col-sm-7">
+                        <input type="file" id="files" name="files" class="form-control" multiple />
                     </div>
+                </div>
 
                     <div class="form-group">
 

@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+}
+
+<h2>Test</h2>
+
+@using (Html.BeginForm("Test", "Test", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+
+        @Html.Label("File Upload", new { @class = "col-sm-3" })
+        @*accept=".xls,.xlsx"*@
+        <div class="col-sm-7">
+            <input type="text" id="path" name="path" class="form-control" multiple />
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-md-offset-3 col-md-10">
+            <br />
+            <input type="submit" title="Upload" value="Upload" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-offset-3 col-md-10">
+            <br />
+            <span style="color:red;">
+                @ViewBag.Message
+            </span>
+        </div>
+    </div>
+}
