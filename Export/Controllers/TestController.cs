@@ -60,27 +60,26 @@ namespace Export.Controllers
                         //insert data to sql
                         for (int j = 0; j < ds.Tables.Count; j++)
                         {
-                            //if (ds.Tables[j].TableName == "'1$'")
-                            //{
+                            if (ds.Tables[j].TableName == "'1$'")
+                            {
 
-                            //    import.BalanceSheet(ds, j, file.FileName);
-                            //}
+                                import.BalanceSheet(ds, j, file.FileName);
+                            }
 
-                             if (ds.Tables[j].TableName == "'2$'")
+                            if (ds.Tables[j].TableName == "'2$'")
                             {
                                 import.IncomeStatement(ds, j, file.FileName);
                             }
-                            //else if (ds.Tables[j].TableName == "'3$'")
-                            //{
-                            //    import.CashFlow(ds, j, file.FileName);
+                            if (ds.Tables[j].TableName == "'3$'")
+                            {
+                                import.CashFlow(ds, j, file.FileName);
 
-                            //}
-                            //else if (ds.Tables[j].TableName == "Ratios$" || ds.Tables[j].TableName == "Ratio$")
-                            //{
-                            //    import.Ratio(ds, j, file.FileName);
-                            //}
+                            }
+                            if (ds.Tables[j].TableName == "Ratios$" || ds.Tables[j].TableName == "Ratio$")
+                            {
+                                import.Ratio(ds, j, file.FileName);
+                            }
                         }
-
                     }
                     else
                     {
@@ -103,36 +102,41 @@ namespace Export.Controllers
         [HttpPost]
         public ActionResult Test(string path)
         {
-            foreach (string filePath in Directory.GetFiles(path, "*.xlsx"))
+            string[] subpaths = { "\\Bank\\A", "\\Bank\\Q", "\\FI\\A", "\\FI\\Q" };            
+            foreach (var subpath in subpaths)
             {
-                string fileName = Path.GetFileName(filePath);
-                string extension = System.IO.Path.GetExtension(fileName).ToLower();
-                DataSet ds = new DataSet();
-                string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                ds = Utility.ConvertXSLXtoDataSet(filePath, connString);
-                for (int j = 0; j < ds.Tables.Count; j++)
+                path = path.Replace("\\Bank\\A", string.Empty).Replace("\\Bank\\Q", string.Empty).Replace("\\FI\\A", string.Empty).Replace("\\FI\\Q", string.Empty);
+                path = path + subpath;
+                foreach (string filePath in Directory.GetFiles(path, "*.xlsx"))
                 {
-                    if (ds.Tables[j].TableName == "'1$'")
+                    string fileName = Path.GetFileName(filePath);
+                    string extension = System.IO.Path.GetExtension(fileName).ToLower();
+                    DataSet ds = new DataSet();
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                    ds = Utility.ConvertXSLXtoDataSet(filePath, connString);
+                    for (int j = 0; j < ds.Tables.Count; j++)
                     {
+                        if (ds.Tables[j].TableName == "'1$'")
+                        {
 
-                        import.BalanceSheet(ds, j, fileName);
+                            import.BalanceSheet(ds, j, fileName);
+                        }
+                        else if (ds.Tables[j].TableName == "'2$'")
+                        {
+                            import.IncomeStatement(ds, j, fileName);
+                        }
+                        else if (ds.Tables[j].TableName == "'3$'")
+                        {
+                            import.CashFlow(ds, j, fileName);
+
+                        }
+                        else if (ds.Tables[j].TableName == "Ratios$" || ds.Tables[j].TableName == "Ratio$")
+                        {
+                            import.Ratio(ds, j, fileName);
+                        }
                     }
-                    //else if (ds.Tables[j].TableName == "'2$'")
-                    //{
-                    //    import.IncomeStatement(ds, j, fileName);
-                    //}
-                    //else if (ds.Tables[j].TableName == "'3$'")
-                    //{
-                    //    import.CashFlow(ds, j, fileName);
-
-                    //}
-                    //else if (ds.Tables[j].TableName == "Ratios$" || ds.Tables[j].TableName == "Ratio$")
-                    //{
-                    //    import.Ratio(ds, j, fileName);
-                    //}
                 }
-
-            }
+            }            
             return View();
         }
     }
